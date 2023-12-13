@@ -1,0 +1,405 @@
+# Default values for tpl.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+replicaCount: 2
+
+image:
+  # -- The Docker registry
+  registry: docker.io
+  # -- Docker image repository
+  repository: nginx
+  # -- Image pull policy 
+  pullPolicy: IfNotPresent
+  # -- Overrides the image tag whose default is the chart appVersion.
+  tag: ""
+
+# -- Image pull secrets
+imagePullSecrets: []
+nameOverride: ""
+fullnameOverride: ""
+
+serviceAccount:
+  # -- Specifies whether a service account should be created
+  create: false
+  # -- Annotations to add to the service account
+  annotations: {}
+  # -- The name of the service account to use.
+  # -- If not set and create is true, a name is generated using the fullname template
+  name: ""
+
+# -- Define command to be executed by grafana container at startup
+command: []
+# command: ["./start.sh"]
+
+# -- Define additional args if command is used
+args: []
+# args: ["app.jar"]
+# -- Deployment labels
+labels: {}
+# app.kubernetes.io/name: app
+
+# -- Create cronjobs
+CronJobs: []
+  # - name: hello
+  #   labels:
+  #     app: hello
+  #   image:
+  #     repository: busybox
+  #     tag: latest
+  #     imagePullPolicy: IfNotPresent
+  #   schedule: "* * * * *"
+  #   failedJobsHistoryLimit: 1
+  #   successfulJobsHistoryLimit: 3
+  #   concurrencyPolicy: Allow
+  #   restartPolicy: Never
+  #   args: ["/bin/sh", "-c", "echo Hello Kubernetes Jobs!"]
+  #   resources:
+  #     limits:
+  #       cpu: 100m
+  #       memory: 100Mi
+  #     requests:
+  #       cpu: 100m
+  #       memory: 100Mi
+        
+  # - name: hello2
+  #   labels:
+  #     app: hello2
+  #   image:
+  #     repository: busybox
+  #     tag: latest
+  #     imagePullPolicy: IfNotPresent
+  #   schedule: "* * * * *"
+  #   failedJobsHistoryLimit: 1
+  #   successfulJobsHistoryLimit: 3
+  #   concurrencyPolicy: Allow
+  #   restartPolicy: Never
+  #   args: ["/bin/sh", "-c", "echo Hello Kubernetes Jobs2!"]
+  #   resources:
+  #     limits:
+  #       cpu: 100m
+  #       memory: 100Mi
+  #     requests:
+  #       cpu: 100m
+  #       memory: 100Mi
+
+# -- Extra environment variables passed to pods
+extraEnvs: []
+#  - name: MY_ENVIRONMENT_VAR
+#    value: the_value_goes_here
+#  - name: AWS_DEFAULT_REGION
+#    valueFrom:
+#      secretKeyRef:
+#        name: secrets
+#        key: AWS_DEFAULT_REGION 
+      
+# -- Allows you to load environment variables from kubernetes secret or config map
+envFrom: []
+# - secretRef:
+#     name: env-secret
+# - configMapRef:
+#     name: config-map
+
+# -- Sidecar containers to add to the pod
+extraContainers: []
+  # - name: sidecar
+  #   image: fluent/fluent-bit
+  #   env:
+  #    - name: FLUENT_ELASTICSEARCH_HOST
+  #      value: "elastic.example.io"
+  #    - name: FLUENT_ELASTICSEARCH_PORT
+  #      value: "9200"
+  #    - name: FLUENT_ELASTICSEARCH_USER
+  #      value: elastic
+  #    - name: FLUENT_ELASTICSEARCH_SCHEME
+  #      value: "https"
+  #    - name: FLUENT_ELASTICSEARCH_SSL_VERIFY
+  #      value: "false"
+  #    - name: FLUENT_ELASTICSEARCH_PASSWORD
+  #      value: changeme
+  #   volumeMounts:
+  #   - name: varlog
+  #     mountPath: /var/log/nginx
+  #   - name: fluent-bit-config
+  #     mountPath: /fluent-bit/etc/
+  # - name: do-something
+  #   image: busybox
+  #   command: ['do', 'something']
+
+# -- Additional init containers
+# ref: https://kubernetes.io/docs/concepts/workloads/pods/init-containers/
+#
+extraInitContainers: []
+  # - name: sleepy
+  #   image: alpine
+  #   command: ['sleep', '60']
+
+# -- Pod annotations
+podAnnotations: {}
+# app.kubernetes.io/name: app
+
+# -- Pod labels
+podLabels: {}
+# app.kubernetes.io/name: app
+
+# -- Deployment strategy
+Strategy: 
+   rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 0
+   type: RollingUpdate
+
+# -- Pod securityContext
+podSecurityContext: {}
+## fsGroup: 2000
+
+# -- Deployment securityContext
+securityContext:
+  # capabilities:
+  #   drop:
+  #   - ALL
+  # readOnlyRootFilesystem: true
+  # runAsNonRoot: true
+  # runAsUser: 1000
+  privileged: false
+
+# -- Additional Container Ports
+containerPorts:
+  - name: http
+    containerPort: 80
+    protocol: TCP
+  # - name: metrics
+  #   containerPort: 12345
+  #   protocol: TCP
+
+service:
+  # -- Service annotations
+  annotations: {}
+  # -- Custom labels
+  labels: {}
+  
+  # -- Kubernetes port where service is exposed
+  servicePorts: 
+    - name: http
+      port: 80
+      targetPort: 80
+    # - name: metrics
+    #   port: 12345
+    #   targetPort: 12345
+  
+  # -- Kubernetes service type
+  type: ClusterIP
+
+# -- Additional configMap volume mounts
+# -- Need to use ConfigMap without creating volume only main container
+configMounts: []
+  # - name: nginx-config
+  #   configName: nginx-config
+  #   path: /etc/nginx/conf.d
+
+# -- Additional secret volume mounts
+# -- Need to use Secrets without the need to create volume only main container
+secretMounts: []
+  # - name: certs
+  #   secretName: secrets-names
+  #   path: /usr/share/config/certs
+
+# -- Create Secrets
+# -- Using Secrets there is no need to create volumes in the main container only
+Secrets: {}
+  # data: 
+  #   secrets: xxxxxxxxxxxxxxxxx 
+  #   nginx.conf: |
+  #     server {
+  #         listen 80;
+  #         server_name _;
+  #   
+  #         location / {
+  #             root /usr/share/nginx/html;
+  #             index index.html;
+  #         }
+  #   
+  #         location /nginx-status {
+  #             stub_status;
+  #             allow 127.0.0.1;
+  #             deny all;
+  #         }
+  #     }
+
+# -- Create configmap 
+# -- Using ConfigMap there is no need to create volumes only the main container
+ConfigMap: {}
+  # nginx.conf: |
+  #   server {
+  #       listen 80;
+  #       server_name _;
+
+  #       location / {
+  #           root /usr/share/nginx/html;
+  #           index index.html;
+  #       }
+
+  #       location /nginx-status {
+  #           stub_status;
+  #           allow 127.0.0.1;
+  #           deny all;
+  #       }
+  #   }
+
+# -- Additional volume mounts
+extraVolumeMounts: []
+  # - name: varlog
+  #   mountPath: /var/log/nginx
+  # - name: extras
+  #   mountPath: /usr/share/extras
+  #   readOnly: true
+
+# -- Additional volumes
+extraVolumes: []
+  # - name: varlog
+  #   emptyDir: {}
+  # - name: fluent-bit-config
+  #   configMap:
+  #     name: fluent-bit-config
+
+# -- Enable creating secrets
+# -- Allows you to load environment variables from kubernetes secret or config map from envFrom, extraInitContainers and extraContainers
+extraSecrets:
+  enabled: false
+  # name: extrasecret
+  # data: 
+  # SECRET: xxxxxxxxxxxxxxx
+  # SECRET2: |
+  #    [SERVICE]
+  #         Daemon Off
+  #         Flush 5           
+  #    [INPUT]
+  #         Name tail
+  #         Path /var/log/nginx/*.log
+  #         Tag kube.*
+  #         Mem_Buf_Limit 300MB
+  #         Skip_Long_Lines On
+  #         Skip_Empty_Lines On 
+  #    [OUTPUT]
+  #         Name es
+  #         Match *
+  #         Host            ${FLUENT_ELASTICSEARCH_HOST}
+  #         Port            ${FLUENT_ELASTICSEARCH_PORT}
+  #         HTTP_User       ${FLUENT_ELASTICSEARCH_USER}
+  #         HTTP_Passwd     ${FLUENT_ELASTICSEARCH_PASSWORD}
+  #         Logstash_Format Off
+  #         Retry_Limit False
+  #         tls On
+  #         tls.verify Off
+  #         Suppress_Type_Name On
+  #         Replace_Dots On
+  #         Index nginx
+
+# -- Enable creating configmap
+# -- Allows you to load environment variables from kubernetes secret or config map from envFrom, extraInitContainers and extraContainers
+extraConfigMap: 
+    enabled: false
+    # name: fluent-bit-config
+    # data:
+    #  CONFIGMAP: "xxxxxxxxxxxxxxxxxxxxxxxxxx"
+    #  fluent-bit.conf: |
+    #    [SERVICE]
+    #        Daemon Off
+    #        Flush 5           
+    #    [INPUT]
+    #        Name tail
+    #        Path /var/log/nginx/*.log
+    #        Tag kube.*
+    #        Mem_Buf_Limit 300MB
+    #        Skip_Long_Lines On
+    #        Skip_Empty_Lines On 
+    #    [OUTPUT]
+    #        Name es
+    #        Match *
+    #        Host            ${FLUENT_ELASTICSEARCH_HOST}
+    #        Port            ${FLUENT_ELASTICSEARCH_PORT}
+    #        HTTP_User       ${FLUENT_ELASTICSEARCH_USER}
+    #        HTTP_Passwd     ${FLUENT_ELASTICSEARCH_PASSWORD}
+    #        Logstash_Format Off
+    #        Retry_Limit False
+    #        tls On
+    #        tls.verify Off
+    #        Suppress_Type_Name On
+    #        Replace_Dots On
+    #        Index nginx
+
+
+ingress:
+  # -- Enable Ingress
+  enabled: false
+  # -- Ingress Class Name. MAY be required for Kubernetes versions >= 1.18
+  ingressClassName: ""
+  # -- Ingress annotations
+  annotations:
+    # kubernetes.io/ingress.class: nginx
+    # kubernetes.io/tls-acme: "true"
+    # alb.ingress.kubernetes.io/group.name: alb
+  # -- Ingress accepted hostnames  
+  hosts:
+    - host: example.domain.io
+      paths:
+        - path: /
+          pathType: Prefix
+          number: 80
+  # -- Ingress TLS configuration           
+  tls: []
+  #  - secretName: chart-example-tls
+  #    hosts:
+  #      - chart-example.local
+
+# -- Liveness and Readiness Probe settings
+probe: {}
+  # livenessProbe:
+  #   httpGet:
+  #     path: /
+  #     port: 80
+  # readinessProbe:
+  #   httpGet:
+  #     path: /
+  #     port: 80
+  #   initialDelaySeconds: 60
+  #   timeoutSeconds: 30
+  #   failureThreshold: 10
+
+# -- CPU/Memory resource requests/limits
+resources: {}
+  # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
+  # limits:
+  #   cpu: 100m
+  #   memory: 128Mi
+  # requests:
+  #   cpu: 100m
+  #   memory: 128Mi
+
+# -- HPA settings
+autoscaling:
+  enabled: false
+  minReplicas: 1
+  maxReplicas: 100
+  targetCPUUtilizationPercentage: 80
+  # targetMemoryUtilizationPercentage: 80
+
+# -- Node labels for pod assignment
+nodeSelector: {}
+ # node: application
+# -- Toleration labels for pod assignment
+tolerations: []
+ # - key: "environment"
+ #   operator: "Equal"
+ #   value: "application"
+ #   effect: "NoSchedule"
+# -- Affinity settings for pod assignment
+affinity: {}
+ #  nodeAffinity:
+ #    requiredDuringSchedulingIgnoredDuringExecution:
+ #      nodeSelectorTerms:
+ #      - matchExpressions:
+ #        - key: disktype
+ #          operator: In
+ #          values:
+ #          - ssd   

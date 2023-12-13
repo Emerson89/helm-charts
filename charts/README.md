@@ -4,15 +4,6 @@
 
 A Helm chart for Kubernetes
 
-## Used
-
-helm repo add tpl https://emerson89.github.io/helm-charts/
-
-helm install nginx tpl/tpl
-
-helm install --debug --dry-run nginx tpl/tpl 
-
-
 ## Values
 
 | Key | Type | Default | Description |

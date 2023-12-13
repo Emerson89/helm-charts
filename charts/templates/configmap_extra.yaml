@@ -1,0 +1,14 @@
+{{- if .Values.extraConfigMap.enabled }}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ .Values.extraConfigMap.name }}
+  labels:
+    chart: "{{ .Chart.Name }}"
+    heritage: {{ .Release.Service | quote }}
+    release: {{ .Release.Name | quote }}
+data:
+{{- with .Values.extraConfigMap.data }}
+  {{- toYaml . | nindent 2 }}
+{{- end }}
+{{- end -}}

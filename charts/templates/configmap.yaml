@@ -1,0 +1,18 @@
+{{- if .Values.ConfigMap }}
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  {{- range .Values.configMounts }}
+  name: {{ .configName }}
+  {{- end }}
+  labels:
+    chart: "{{ .Chart.Name }}"
+    heritage: {{ .Release.Service | quote }}
+    release: {{ .Release.Name | quote }}
+data:
+{{- range $path, $config := .Values.ConfigMap }}
+  {{ $path }}: |
+{{ tpl $config $ | indent 4 -}}
+{{- end -}}
+{{- end -}}
