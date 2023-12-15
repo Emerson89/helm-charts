@@ -12,4 +12,4 @@ helm repo add tpl https://emerson89.github.io/helm-charts
 ```
 You can then run `helm search repo tpl` to see the charts.
 
-Chart documentation is available in directory.
+Chart documentation is available in [directory](https://github.com/Emerson89/helm-charts).
