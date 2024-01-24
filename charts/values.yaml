@@ -2,7 +2,26 @@
 # This is a YAML-formatted file.
 # Declare variables to be passed into your templates.
 
-replicaCount: 2
+replicaCount: 1
+
+# -- Type Statefulset 
+statefulset: false
+
+# -- Persistence only type statefulset
+persistence: 
+ enabled: false
+ volumeClaimTemplates:
+   - name: data ## It should be the same name used in "extraVolumeMounts"
+     accessModes: [ "ReadWriteOnce" ]
+     #storageClassName: gp3
+     resources:
+       requests:
+         storage: 1Gi
+
+# -- Statefulset strategy
+UpdateStrategy:
+   # -- OnDelete or RollingUpdate
+   type: RollingUpdate
 
 image:
   # -- The Docker registry
@@ -35,53 +54,9 @@ command: []
 # -- Define additional args if command is used
 args: []
 # args: ["app.jar"]
-# -- Deployment labels
+# -- Deployment and Statefulset labels
 labels: {}
 # app.kubernetes.io/name: app
-
-# -- Create cronjobs
-CronJobs: []
-  # - name: hello
-  #   labels:
-  #     app: hello
-  #   image:
-  #     repository: busybox
-  #     tag: latest
-  #     imagePullPolicy: IfNotPresent
-  #   schedule: "* * * * *"
-  #   failedJobsHistoryLimit: 1
-  #   successfulJobsHistoryLimit: 3
-  #   concurrencyPolicy: Allow
-  #   restartPolicy: Never
-  #   args: ["/bin/sh", "-c", "echo Hello Kubernetes Jobs!"]
-  #   resources:
-  #     limits:
-  #       cpu: 100m
-  #       memory: 100Mi
-  #     requests:
-  #       cpu: 100m
-  #       memory: 100Mi
-        
-  # - name: hello2
-  #   labels:
-  #     app: hello2
-  #   image:
-  #     repository: busybox
-  #     tag: latest
-  #     imagePullPolicy: IfNotPresent
-  #   schedule: "* * * * *"
-  #   failedJobsHistoryLimit: 1
-  #   successfulJobsHistoryLimit: 3
-  #   concurrencyPolicy: Allow
-  #   restartPolicy: Never
-  #   args: ["/bin/sh", "-c", "echo Hello Kubernetes Jobs2!"]
-  #   resources:
-  #     limits:
-  #       cpu: 100m
-  #       memory: 100Mi
-  #     requests:
-  #       cpu: 100m
-  #       memory: 100Mi
 
 # -- Extra environment variables passed to pods
 extraEnvs: []
@@ -95,44 +70,8 @@ extraEnvs: []
       
 # -- Allows you to load environment variables from kubernetes secret or config map
 envFrom: []
-# - secretRef:
-#     name: env-secret
 # - configMapRef:
 #     name: config-map
-
-# -- Sidecar containers to add to the pod
-extraContainers: []
-  # - name: sidecar
-  #   image: fluent/fluent-bit
-  #   env:
-  #    - name: FLUENT_ELASTICSEARCH_HOST
-  #      value: "elastic.example.io"
-  #    - name: FLUENT_ELASTICSEARCH_PORT
-  #      value: "9200"
-  #    - name: FLUENT_ELASTICSEARCH_USER
-  #      value: elastic
-  #    - name: FLUENT_ELASTICSEARCH_SCHEME
-  #      value: "https"
-  #    - name: FLUENT_ELASTICSEARCH_SSL_VERIFY
-  #      value: "false"
-  #    - name: FLUENT_ELASTICSEARCH_PASSWORD
-  #      value: changeme
-  #   volumeMounts:
-  #   - name: varlog
-  #     mountPath: /var/log/nginx
-  #   - name: fluent-bit-config
-  #     mountPath: /fluent-bit/etc/
-  # - name: do-something
-  #   image: busybox
-  #   command: ['do', 'something']
-
-# -- Additional init containers
-# ref: https://kubernetes.io/docs/concepts/workloads/pods/init-containers/
-#
-extraInitContainers: []
-  # - name: sleepy
-  #   image: alpine
-  #   command: ['sleep', '60']
 
 # -- Pod annotations
 podAnnotations: {}
@@ -227,7 +166,7 @@ Secrets: {}
   #     }
 
 # -- Create configmap 
-# -- Using ConfigMap there is no need to create volumes only the main container
+# -- Using ConfigMap it is not necessary to create volumes, only for the main container
 ConfigMap: {}
   # nginx.conf: |
   #   server {
@@ -261,73 +200,6 @@ extraVolumes: []
   # - name: fluent-bit-config
   #   configMap:
   #     name: fluent-bit-config
-
-# -- Enable creating secrets
-# -- Allows you to load environment variables from kubernetes secret or config map from envFrom, extraInitContainers and extraContainers
-extraSecrets:
-  enabled: false
-  # name: extrasecret
-  # data: 
-  # SECRET: xxxxxxxxxxxxxxx
-  # SECRET2: |
-  #    [SERVICE]
-  #         Daemon Off
-  #         Flush 5           
-  #    [INPUT]
-  #         Name tail
-  #         Path /var/log/nginx/*.log
-  #         Tag kube.*
-  #         Mem_Buf_Limit 300MB
-  #         Skip_Long_Lines On
-  #         Skip_Empty_Lines On 
-  #    [OUTPUT]
-  #         Name es
-  #         Match *
-  #         Host            ${FLUENT_ELASTICSEARCH_HOST}
-  #         Port            ${FLUENT_ELASTICSEARCH_PORT}
-  #         HTTP_User       ${FLUENT_ELASTICSEARCH_USER}
-  #         HTTP_Passwd     ${FLUENT_ELASTICSEARCH_PASSWORD}
-  #         Logstash_Format Off
-  #         Retry_Limit False
-  #         tls On
-  #         tls.verify Off
-  #         Suppress_Type_Name On
-  #         Replace_Dots On
-  #         Index nginx
-
-# -- Enable creating configmap
-# -- Allows you to load environment variables from kubernetes secret or config map from envFrom, extraInitContainers and extraContainers
-extraConfigMap: 
-    enabled: false
-    # name: fluent-bit-config
-    # data:
-    #  CONFIGMAP: "xxxxxxxxxxxxxxxxxxxxxxxxxx"
-    #  fluent-bit.conf: |
-    #    [SERVICE]
-    #        Daemon Off
-    #        Flush 5           
-    #    [INPUT]
-    #        Name tail
-    #        Path /var/log/nginx/*.log
-    #        Tag kube.*
-    #        Mem_Buf_Limit 300MB
-    #        Skip_Long_Lines On
-    #        Skip_Empty_Lines On 
-    #    [OUTPUT]
-    #        Name es
-    #        Match *
-    #        Host            ${FLUENT_ELASTICSEARCH_HOST}
-    #        Port            ${FLUENT_ELASTICSEARCH_PORT}
-    #        HTTP_User       ${FLUENT_ELASTICSEARCH_USER}
-    #        HTTP_Passwd     ${FLUENT_ELASTICSEARCH_PASSWORD}
-    #        Logstash_Format Off
-    #        Retry_Limit False
-    #        tls On
-    #        tls.verify Off
-    #        Suppress_Type_Name On
-    #        Replace_Dots On
-    #        Index nginx
-
 
 ingress:
   # -- Enable Ingress
@@ -403,3 +275,147 @@ affinity: {}
  #          operator: In
  #          values:
  #          - ssd   
+
+# -- Create cronjobs
+CronJobs: []
+  # - name: hello
+  #   labels:
+  #     app: hello
+  #   image:
+  #     repository: busybox
+  #     tag: latest
+  #     imagePullPolicy: IfNotPresent
+  #   schedule: "* * * * *"
+  #   failedJobsHistoryLimit: 1
+  #   successfulJobsHistoryLimit: 3
+  #   concurrencyPolicy: Allow
+  #   restartPolicy: Never
+  #   args: ["/bin/sh", "-c", "echo Hello Kubernetes Jobs!"]
+  #   resources:
+  #     limits:
+  #       cpu: 100m
+  #       memory: 100Mi
+  #     requests:
+  #       cpu: 100m
+  #       memory: 100Mi
+        
+  # - name: hello2
+  #   labels:
+  #     app: hello2
+  #   image:
+  #     repository: busybox
+  #     tag: latest
+  #     imagePullPolicy: IfNotPresent
+  #   schedule: "* * * * *"
+  #   failedJobsHistoryLimit: 1
+  #   successfulJobsHistoryLimit: 3
+  #   concurrencyPolicy: Allow
+  #   restartPolicy: Never
+  #   args: ["/bin/sh", "-c", "echo Hello Kubernetes Jobs2!"]
+  #   resources:
+  #     limits:
+  #       cpu: 100m
+  #       memory: 100Mi
+  #     requests:
+  #       cpu: 100m
+  #       memory: 100Mi
+
+# -- Sidecar containers to add to the pod
+extraContainers: []
+  # - name: sidecar
+  #   image: fluent/fluent-bit
+  #   env:
+  #    - name: FLUENT_ELASTICSEARCH_HOST
+  #      value: "elastic.example.io"
+  #    - name: FLUENT_ELASTICSEARCH_PORT
+  #      value: "9200"
+  #    - name: FLUENT_ELASTICSEARCH_USER
+  #      value: elastic
+  #    - name: FLUENT_ELASTICSEARCH_SCHEME
+  #      value: "https"
+  #    - name: FLUENT_ELASTICSEARCH_SSL_VERIFY
+  #      value: "false"
+  #    - name: FLUENT_ELASTICSEARCH_PASSWORD
+  #      value: changeme
+  #   volumeMounts:
+  #   - name: varlog
+  #     mountPath: /var/log/nginx
+  #   - name: fluent-bit-config
+  #     mountPath: /fluent-bit/etc/
+  # - name: do-something
+  #   image: busybox
+  #   command: ['do', 'something']
+
+# -- Additional init containers
+# ref: https://kubernetes.io/docs/concepts/workloads/pods/init-containers/
+#
+extraInitContainers: []
+  # - name: sleepy
+  #   image: alpine
+  #   command: ['sleep', '60']
+
+# -- Enable creating secrets
+# -- Allows you to load environment variables from kubernetes secret or config map from envFrom, extraInitContainers and extraContainers
+extraSecrets:
+  enabled: false
+  # name: extrasecret
+  # data: 
+  # SECRET: xxxxxxxxxxxxxxx
+  # SECRET2: |
+  #    [SERVICE]
+  #         Daemon Off
+  #         Flush 5           
+  #    [INPUT]
+  #         Name tail
+  #         Path /var/log/nginx/*.log
+  #         Tag kube.*
+  #         Mem_Buf_Limit 300MB
+  #         Skip_Long_Lines On
+  #         Skip_Empty_Lines On 
+  #    [OUTPUT]
+  #         Name es
+  #         Match *
+  #         Host            ${FLUENT_ELASTICSEARCH_HOST}
+  #         Port            ${FLUENT_ELASTICSEARCH_PORT}
+  #         HTTP_User       ${FLUENT_ELASTICSEARCH_USER}
+  #         HTTP_Passwd     ${FLUENT_ELASTICSEARCH_PASSWORD}
+  #         Logstash_Format Off
+  #         Retry_Limit False
+  #         tls On
+  #         tls.verify Off
+  #         Suppress_Type_Name On
+  #         Replace_Dots On
+  #         Index nginx
+
+# -- Enable creating configmap
+# -- Allows you to load environment variables from kubernetes secret or config map from envFrom, extraInitContainers and extraContainers
+extraConfigMap: 
+    enabled: false
+    # name: fluent-bit-config
+    # data:
+    #  CONFIGMAP: "xxxxxxxxxxxxxxxxxxxxxxxxxx"
+    #  fluent-bit.conf: |
+    #    [SERVICE]
+    #        Daemon Off
+    #        Flush 5           
+    #    [INPUT]
+    #        Name tail
+    #        Path /var/log/nginx/*.log
+    #        Tag kube.*
+    #        Mem_Buf_Limit 300MB
+    #        Skip_Long_Lines On
+    #        Skip_Empty_Lines On 
+    #    [OUTPUT]
+    #        Name es
+    #        Match *
+    #        Host            ${FLUENT_ELASTICSEARCH_HOST}
+    #        Port            ${FLUENT_ELASTICSEARCH_PORT}
+    #        HTTP_User       ${FLUENT_ELASTICSEARCH_USER}
+    #        HTTP_Passwd     ${FLUENT_ELASTICSEARCH_PASSWORD}
+    #        Logstash_Format Off
+    #        Retry_Limit False
+    #        tls On
+    #        tls.verify Off
+    #        Suppress_Type_Name On
+    #        Replace_Dots On
+    #        Index nginx

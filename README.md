@@ -6,21 +6,23 @@ A Helm chart for Kubernetes
 
 ## Used
 
-helm repo add tpl https://emerson89.github.io/helm-charts/
+helm repo add nginx https://emerson89.github.io/helm-charts/
 
-helm install nginx tpl/tpl
+helm install nginx nginx/tpl
 
-helm install --debug --dry-run nginx tpl/tpl 
+helm install --debug --dry-run nginx nginx/tpl 
 
 
 ## Values
 
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
-| ConfigMap | object | `{}` | Using ConfigMap there is no need to create volumes only the main container |
+| ConfigMap | object | `{}` | Using ConfigMap it is not necessary to create volumes, only for the main container |
 | CronJobs | list | `[]` | Create cronjobs |
 | Secrets | object | `{}` | Using Secrets there is no need to create volumes in the main container only |
 | Strategy | object | `{"rollingUpdate":{"maxSurge":1,"maxUnavailable":0},"type":"RollingUpdate"}` | Deployment strategy |
+| UpdateStrategy | object | `{"type":"RollingUpdate"}` | Statefulset strategy |
+| UpdateStrategy.type | string | `"RollingUpdate"` | OnDelete or RollingUpdate |
 | affinity | object | `{}` | Affinity settings for pod assignment |
 | args | list | `[]` | Define additional args if command is used |
 | autoscaling | object | `{"enabled":false,"maxReplicas":100,"minReplicas":1,"targetCPUUtilizationPercentage":80}` | HPA settings |
@@ -46,14 +48,15 @@ helm install --debug --dry-run nginx tpl/tpl
 | ingress.hosts | list | `[{"host":"example.domain.io","paths":[{"number":80,"path":"/","pathType":"Prefix"}]}]` | Ingress accepted hostnames   |
 | ingress.ingressClassName | string | `""` | Ingress Class Name. MAY be required for Kubernetes versions >= 1.18 |
 | ingress.tls | list | `[]` | Ingress TLS configuration            |
-| labels | object | `{}` | Deployment labels |
+| labels | object | `{}` | Deployment and Statefulset labels |
 | nameOverride | string | `""` |  |
 | nodeSelector | object | `{}` | Node labels for pod assignment |
+| persistence | object | `{"enabled":false,"volumeClaimTemplates":[{"accessModes":["ReadWriteOnce"],"name":"data","resources":{"requests":{"storage":"1Gi"}}}]}` | Persistence only type statefulset |
 | podAnnotations | object | `{}` | Pod annotations |
 | podLabels | object | `{}` | Pod labels |
 | podSecurityContext | object | `{}` | Pod securityContext |
 | probe | object | `{}` | Liveness and Readiness Probe settings |
-| replicaCount | int | `2` |  |
+| replicaCount | int | `1` |  |
 | resources | object | `{}` | CPU/Memory resource requests/limits |
 | secretMounts | list | `[]` | Need to use Secrets without the need to create volume only main container |
 | securityContext | object | `{"privileged":false}` | Deployment securityContext |
@@ -64,6 +67,7 @@ helm install --debug --dry-run nginx tpl/tpl
 | serviceAccount.annotations | object | `{}` | Annotations to add to the service account |
 | serviceAccount.create | bool | `false` | Specifies whether a service account should be created |
 | serviceAccount.name | string | `""` | If not set and create is true, a name is generated using the fullname template |
+| statefulset | bool | `false` | Type Statefulset  |
 | tolerations | list | `[]` | Toleration labels for pod assignment |
 
 ----------------------------------------------

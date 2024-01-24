@@ -1,6 +1,6 @@
-{{- if not .Values.statefulset }}
+{{- if .Values.statefulset }}
 apiVersion: apps/v1
-kind: Deployment
+kind: StatefulSet
 metadata:
   name: {{ .Release.Name }}
   labels:
@@ -16,8 +16,9 @@ spec:
   {{- if not .Values.autoscaling.enabled }}
   replicas: {{ .Values.replicaCount }}
   {{- end }}
-  {{- with .Values.Strategy }}
-  strategy:
+  serviceName: {{ .Release.Name }}
+  {{- with .Values.UpdateStrategy }}
+  updateStrategy:
     {{- toYaml . | trim | nindent 4 }}
   {{- end }}
   selector:
@@ -122,5 +123,18 @@ spec:
         - name: {{ .name }}
           configMap:
             name: {{ .configName }}
-        {{- end }}       
+        {{- end }}
+  {{- if .Values.persistence.enabled }}
+  volumeClaimTemplates:
+  {{- range .Values.persistence.volumeClaimTemplates }}
+  - metadata:
+      name: {{ .name }}
+    spec:
+      accessModes: {{ .accessModes | toYaml | nindent 6 }}
+      storageClassName: {{ .storageClassName | default "" }}
+      resources:
+        requests:
+          storage: {{ .resources.requests.storage }}
+  {{- end }}        
   {{- end }}  
+{{- end }}  
