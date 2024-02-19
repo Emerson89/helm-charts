@@ -26,15 +26,17 @@ spec:
       {{- include "tpl.selectorLabels" . | nindent 6 }}
   template:
     metadata:
-      {{- with .Values.podAnnotations }}
       annotations:
-        {{- toYaml . | nindent 8 }}
-      {{- end }}
-        checksum/config: {{ include (print $.Template.BasePath "/configmap.yaml") . | sha256sum }}
-        checksum/config: {{ include (print $.Template.BasePath "/secret.yaml") . | sha256sum }}
-        checksum/config: {{ include (print $.Template.BasePath "/configmap_extra.yaml") . | sha256sum }}
-        checksum/config: {{ include (print $.Template.BasePath "/secret_extra.yaml") . | sha256sum }}
+        {{- range $key, $value := .Values.podAnnotations }}
+        {{ $key }}: {{ $value | quote }}
+        {{- end }}
+        {{- if or .Values.ConfigMap .Values.extraConfigMap.enabled .Values.Secrets .Values.extraSecrets.enabled }}
+        configChecksum: {{ include (print $.Template.BasePath "/configmap.yaml") . | sha256sum }}
+        configChecksum: {{ include (print $.Template.BasePath "/secret.yaml") . | sha256sum }}
+        configChecksum: {{ include (print $.Template.BasePath "/configmap_extra.yaml") . | sha256sum }}
+        configChecksum: {{ include (print $.Template.BasePath "/secret_extra.yaml") . | sha256sum }}
         "helm.sh/hook-delete-policy": before-hook-creation,hook-succeeded
+        {{- end }}
       labels:
         {{- include "tpl.selectorLabels" . | nindent 8 }}
         {{- with .Values.podLabels }}

@@ -20,7 +20,7 @@ persistence:
 
 # -- Statefulset strategy
 UpdateStrategy:
-   # -- OnDelete or RollingUpdate
+   # -- OnDelete 
    type: RollingUpdate
 
 image:
@@ -146,44 +146,43 @@ secretMounts: []
 # -- Create Secrets
 # -- Using Secrets there is no need to create volumes in the main container only
 Secrets: {}
-  # data: 
-  #   secrets: xxxxxxxxxxxxxxxxx 
-  #   nginx.conf: |
-  #     server {
-  #         listen 80;
-  #         server_name _;
-  #   
-  #         location / {
-  #             root /usr/share/nginx/html;
-  #             index index.html;
-  #         }
-  #   
-  #         location /nginx-status {
-  #             stub_status;
-  #             allow 127.0.0.1;
-  #             deny all;
-  #         }
-  #     }
+    # secrets: xxxxxxxxxxxxxxxxx 
+    # nginx.conf: |
+    #    server {
+    #        listen 80;
+   
+    #        error_log  /var/log/nginx/error.log;
+    #        access_log  /var/log/nginx/access.log;
+   
+    #        location / {
+    #          root /usr/share/nginx/html;
+    #          index index.html;
+    #        }
+   
+    #        location /nginx_status {
+    #            stub_status on;
+    #        }
+    #    }
 
 # -- Create configmap 
 # -- Using ConfigMap it is not necessary to create volumes, only for the main container
 ConfigMap: {}
-  # nginx.conf: |
-  #   server {
-  #       listen 80;
-  #       server_name _;
-
-  #       location / {
-  #           root /usr/share/nginx/html;
-  #           index index.html;
-  #       }
-
-  #       location /nginx-status {
-  #           stub_status;
-  #           allow 127.0.0.1;
-  #           deny all;
-  #       }
-  #   }
+    # nginx.conf: |
+    #    server {
+    #        listen 80;
+   
+    #        error_log  /var/log/nginx/error.log;
+    #        access_log  /var/log/nginx/access.log;
+           
+    #        location / {
+    #          root /usr/share/nginx/html;
+    #          index index.html;
+    #        }
+   
+    #        location /nginx_status {
+    #            stub_status on;
+    #        }
+    #    }
 
 # -- Additional volume mounts
 extraVolumeMounts: []

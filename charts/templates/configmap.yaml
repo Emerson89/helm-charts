@@ -10,9 +10,6 @@ metadata:
     chart: "{{ .Chart.Name }}"
     heritage: {{ .Release.Service | quote }}
     release: {{ .Release.Name | quote }}
-  annotations:
-    "helm.sh/hook": post-upgrade
-    "helm.sh/hook-weight": "1"
 data:
 {{- range $path, $config := .Values.ConfigMap }}
   {{ $path }}: |
