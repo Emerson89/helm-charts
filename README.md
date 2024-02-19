@@ -6,13 +6,23 @@ A Helm chart for Kubernetes
 
 ## Used
 
+```
 helm repo add nginx https://emerson89.github.io/helm-charts/
+```
 
+```
 helm install nginx nginx/tpl
+```
 
+```
 helm install --debug --dry-run nginx nginx/tpl 
+```
 
-
+***local***
+```
+helm install --debug --dry-run nginx ./charts -f values.yaml 
+```
+#
 ## Values
 
 | Key | Type | Default | Description |

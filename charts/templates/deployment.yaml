@@ -29,6 +29,11 @@ spec:
       annotations:
         {{- toYaml . | nindent 8 }}
       {{- end }}
+        checksum/config: {{ include (print $.Template.BasePath "/configmap.yaml") . | sha256sum }}
+        checksum/config: {{ include (print $.Template.BasePath "/secret.yaml") . | sha256sum }}
+        checksum/config: {{ include (print $.Template.BasePath "/configmap_extra.yaml") . | sha256sum }}
+        checksum/config: {{ include (print $.Template.BasePath "/secret_extra.yaml") . | sha256sum }}
+        "helm.sh/hook-delete-policy": before-hook-creation,hook-succeeded
       labels:
         {{- include "tpl.selectorLabels" . | nindent 8 }}
         {{- with .Values.podLabels }}

@@ -3,16 +3,13 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  {{- range .Values.configMounts }}
-  name: {{ .configName }}
-  {{- end }}
+  name: pre-install-configmap
+  annotations:
+    "helm.sh/hook": pre-install,post-upgrade
   labels:
     chart: "{{ .Chart.Name }}"
     heritage: {{ .Release.Service | quote }}
     release: {{ .Release.Name | quote }}
-  annotations:
-    "helm.sh/hook": post-upgrade
-    "helm.sh/hook-weight": "1"
 data:
 {{- range $path, $config := .Values.ConfigMap }}
   {{ $path }}: |
