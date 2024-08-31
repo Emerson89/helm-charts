@@ -1,0 +1,28 @@
+{{- if .Values.serviceMonitor.create -}}
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: {{ .Release.Name }}
+  labels:
+    {{- include "tpl.labels" . | nindent 4 }}
+    {{- with .Values.serviceMonitor.labels }}
+    {{- toYaml . | nindent 4 }}
+    {{- end }}
+  {{- with .Values.serviceMonitor.annotations }}
+  annotations:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+spec:
+  jobLabel: {{ .Values.serviceMonitor.jobLabel | quote }}
+  namespaceSelector:
+    any: true 
+  selector:
+    matchLabels:
+      {{- include "tpl.selectorLabels" . | nindent 6 }}
+  endpoints:
+    {{- range .Values.serviceMonitor.endpoints }}
+    - port: {{ .port }}
+      path: {{ .path }}
+      interval: {{ .interval }}
+    {{- end }}   
+{{- end }}

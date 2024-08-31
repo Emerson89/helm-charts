@@ -1,8 +1,8 @@
 # tpl
 
-A Helm chart for Kubernetes
+![Version: 2.0.0](https://img.shields.io/badge/Version-2.0.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 1.23.0](https://img.shields.io/badge/AppVersion-1.23.0-informational?style=flat-square)
 
-![Version: 0.1.0](https://img.shields.io/badge/Version-0.1.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 1.19.0](https://img.shields.io/badge/AppVersion-1.19.0-informational?style=flat-square)
+A Helm chart for Kubernetes
 
 ## Values
 
@@ -13,10 +13,10 @@ A Helm chart for Kubernetes
 | Secrets | object | `{}` | Using Secrets there is no need to create volumes in the main container only |
 | Strategy | object | `{"rollingUpdate":{"maxSurge":1,"maxUnavailable":0},"type":"RollingUpdate"}` | Deployment strategy |
 | UpdateStrategy | object | `{"type":"RollingUpdate"}` | Statefulset strategy |
-| UpdateStrategy.type | string | `"RollingUpdate"` | OnDelete or RollingUpdate |
+| UpdateStrategy.type | string | `"RollingUpdate"` | OnDelete  |
 | affinity | object | `{}` | Affinity settings for pod assignment |
 | args | list | `[]` | Define additional args if command is used |
-| autoscaling | object | `{"enabled":false,"maxReplicas":100,"minReplicas":1,"targetCPUUtilizationPercentage":80}` | HPA settings |
+| autoscaling | object | `{"enabled":false,"maxReplicas":10,"minReplicas":1,"targetCPUUtilizationPercentage":80,"targetMemoryUtilizationPercentage":80,"targetsCustom":[{"pods":{"metric":{"name":"http_request_per_second"},"target":{"averageValue":5,"type":"AverageValue"}},"type":"Pods"}]}` | HPA settings |
 | command | list | `[]` | Define command to be executed by grafana container at startup |
 | configMounts | list | `[]` | Need to use ConfigMap without creating volume only main container |
 | containerPorts | list | `[{"containerPort":80,"name":"http","protocol":"TCP"}]` | Additional Container Ports |
@@ -28,7 +28,6 @@ A Helm chart for Kubernetes
 | extraSecrets | object | `{"enabled":false}` | Allows you to load environment variables from kubernetes secret or config map from envFrom, extraInitContainers and extraContainers |
 | extraVolumeMounts | list | `[]` | Additional volume mounts |
 | extraVolumes | list | `[]` | Additional volumes |
-| fullnameOverride | string | `""` |  |
 | image.pullPolicy | string | `"IfNotPresent"` | Image pull policy  |
 | image.registry | string | `"docker.io"` | The Docker registry |
 | image.repository | string | `"nginx"` | Docker image repository |
@@ -40,7 +39,6 @@ A Helm chart for Kubernetes
 | ingress.ingressClassName | string | `""` | Ingress Class Name. MAY be required for Kubernetes versions >= 1.18 |
 | ingress.tls | list | `[]` | Ingress TLS configuration            |
 | labels | object | `{}` | Deployment and Statefulset labels |
-| nameOverride | string | `""` |  |
 | nodeSelector | object | `{}` | Node labels for pod assignment |
 | persistence | object | `{"enabled":false,"volumeClaimTemplates":[{"accessModes":["ReadWriteOnce"],"name":"data","resources":{"requests":{"storage":"1Gi"}}}]}` | Persistence only type statefulset |
 | podAnnotations | object | `{}` | Pod annotations |
@@ -52,12 +50,18 @@ A Helm chart for Kubernetes
 | secretMounts | list | `[]` | Need to use Secrets without the need to create volume only main container |
 | securityContext | object | `{"privileged":false}` | Deployment securityContext |
 | service.annotations | object | `{}` | Service annotations |
-| service.labels | object | `{}` | Custom labels |
+| service.labels | object | `{}` | Custom service labels |
 | service.servicePorts | list | `[{"name":"http","port":80,"targetPort":80}]` | Kubernetes port where service is exposed |
 | service.type | string | `"ClusterIP"` | Kubernetes service type |
 | serviceAccount.annotations | object | `{}` | Annotations to add to the service account |
 | serviceAccount.create | bool | `false` | Specifies whether a service account should be created |
 | serviceAccount.name | string | `""` | If not set and create is true, a name is generated using the fullname template |
+| serviceMonitor | object | `{"annotations":{},"create":false,"endpoints":[],"jobLabel":"","labels":{}}` | Metrics Service Monitor |
+| serviceMonitor.annotations | object | `{}` | Service Monitor annotations |
+| serviceMonitor.create | bool | `false` | Specifies whether a service monitor should be created |
+| serviceMonitor.endpoints | list | `[]` | endpoints Service monitor |
+| serviceMonitor.jobLabel | string | `""` | jobLabel Service monitor |
+| serviceMonitor.labels | object | `{}` | Additional labels Service monitor |
 | statefulset | bool | `false` | Type Statefulset  |
 | tolerations | list | `[]` | Toleration labels for pod assignment |
 

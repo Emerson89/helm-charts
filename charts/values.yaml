@@ -10,6 +10,7 @@ statefulset: false
 # -- Persistence only type statefulset
 persistence: 
  enabled: false
+
  volumeClaimTemplates:
    - name: data ## It should be the same name used in "extraVolumeMounts"
      accessModes: [ "ReadWriteOnce" ]
@@ -35,8 +36,6 @@ image:
 
 # -- Image pull secrets
 imagePullSecrets: []
-nameOverride: ""
-fullnameOverride: ""
 
 serviceAccount:
   # -- Specifies whether a service account should be created
@@ -108,13 +107,13 @@ containerPorts:
     containerPort: 80
     protocol: TCP
   # - name: metrics
-  #   containerPort: 12345
+  #   containerPort: 3000
   #   protocol: TCP
 
 service:
   # -- Service annotations
   annotations: {}
-  # -- Custom labels
+  # -- Custom service labels
   labels: {}
   
   # -- Kubernetes port where service is exposed
@@ -123,8 +122,8 @@ service:
       port: 80
       targetPort: 80
     # - name: metrics
-    #   port: 12345
-    #   targetPort: 12345
+    #   port: 3000
+    #   targetPort: 3000
   
   # -- Kubernetes service type
   type: ClusterIP
@@ -250,20 +249,66 @@ resources: {}
 # -- HPA settings
 autoscaling:
   enabled: false
+
   minReplicas: 1
-  maxReplicas: 100
+  maxReplicas: 10
   targetCPUUtilizationPercentage: 80
-  # targetMemoryUtilizationPercentage: 80
+  targetMemoryUtilizationPercentage: 80
+  targetsCustom:
+    - type: Pods
+      pods:
+        metric: 
+          name: http_request_per_second
+        target:
+          type: AverageValue
+          averageValue: 5
+    # - type: Object
+    #   object:
+    #     metric:
+    #       name: requests-per-second
+    #     describedObject:
+    #       apiVersion: networking.k8s.io/v1
+    #       kind: Ingress
+    #       name: main-route
+    #     target:
+    #       type: Value
+    #       value: 10k        
+
+# -- Metrics Service Monitor
+serviceMonitor:
+
+  # -- Specifies whether a service monitor should be created
+  create: false
+  
+  # -- Service Monitor annotations
+  annotations: {}
+  # app.kubernetes.io/name: app
+
+  # -- Additional labels Service monitor
+  labels: {}
+  # release: prometheus
+
+  # -- jobLabel Service monitor
+  jobLabel: ""
+  # jobLabel: "jobLabel"
+  
+  # -- endpoints Service monitor
+  endpoints: []
+  # - port: metrics
+  #   path: /metrics
+  #   interval: 30s
 
 # -- Node labels for pod assignment
 nodeSelector: {}
  # node: application
+ 
 # -- Toleration labels for pod assignment
 tolerations: []
  # - key: "environment"
  #   operator: "Equal"
  #   value: "application"
  #   effect: "NoSchedule"
+
 # -- Affinity settings for pod assignment
 affinity: {}
  #  nodeAffinity:
