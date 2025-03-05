@@ -1,6 +1,6 @@
 # tpl
 
-![Version: 2.0.0](https://img.shields.io/badge/Version-2.0.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 1.23.0](https://img.shields.io/badge/AppVersion-1.23.0-informational?style=flat-square)
+![Version: 2.1.0](https://img.shields.io/badge/Version-2.1.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 1.23.0](https://img.shields.io/badge/AppVersion-1.23.0-informational?style=flat-square)
 
 A Helm chart for Kubernetes
 
@@ -16,7 +16,7 @@ A Helm chart for Kubernetes
 | UpdateStrategy.type | string | `"RollingUpdate"` | OnDelete  |
 | affinity | object | `{}` | Affinity settings for pod assignment |
 | args | list | `[]` | Define additional args if command is used |
-| autoscaling | object | `{"enabled":false,"maxReplicas":10,"minReplicas":1,"targetCPUUtilizationPercentage":80,"targetMemoryUtilizationPercentage":80,"targetsCustom":[{"pods":{"metric":{"name":"http_request_per_second"},"target":{"averageValue":5,"type":"AverageValue"}},"type":"Pods"}]}` | HPA settings |
+| autoscaling | object | `{"enabled":false,"maxReplicas":10,"minReplicas":1}` | HPA settings |
 | command | list | `[]` | Define command to be executed by grafana container at startup |
 | configMounts | list | `[]` | Need to use ConfigMap without creating volume only main container |
 | containerPorts | list | `[{"containerPort":80,"name":"http","protocol":"TCP"}]` | Additional Container Ports |
@@ -48,6 +48,7 @@ A Helm chart for Kubernetes
 | replicaCount | int | `1` |  |
 | resources | object | `{}` | CPU/Memory resource requests/limits |
 | secretMounts | list | `[]` | Need to use Secrets without the need to create volume only main container |
+| secretsProvider | object | `{"data":[],"enabled":false,"name":"secret-name","objects":[],"provider":"aws","region":"us-east-1"}` | Secret store CSI Driver - https://secrets-store-csi-driver.sigs.k8s.io/ |
 | securityContext | object | `{"privileged":false}` | Deployment securityContext |
 | service.annotations | object | `{}` | Service annotations |
 | service.labels | object | `{}` | Custom service labels |
@@ -55,7 +56,7 @@ A Helm chart for Kubernetes
 | service.type | string | `"ClusterIP"` | Kubernetes service type |
 | serviceAccount.annotations | object | `{}` | Annotations to add to the service account |
 | serviceAccount.create | bool | `false` | Specifies whether a service account should be created |
-| serviceAccount.name | string | `""` | If not set and create is true, a name is generated using the fullname template |
+| serviceAccount.name | string | `"secret-sa"` | If not set and create is true, a name is generated using the fullname template |
 | serviceMonitor | object | `{"annotations":{},"create":false,"endpoints":[],"jobLabel":"","labels":{}}` | Metrics Service Monitor |
 | serviceMonitor.annotations | object | `{}` | Service Monitor annotations |
 | serviceMonitor.create | bool | `false` | Specifies whether a service monitor should be created |

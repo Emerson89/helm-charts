@@ -1,7 +1,3 @@
-# Default values for tpl.
-# This is a YAML-formatted file.
-# Declare variables to be passed into your templates.
-
 replicaCount: 1
 
 # -- Type Statefulset 
@@ -42,9 +38,10 @@ serviceAccount:
   create: false
   # -- Annotations to add to the service account
   annotations: {}
+      #eks.amazonaws.com/role-arn: arn:aws:iam::xxxxxxxxxxxx:role/role-sa
   # -- The name of the service account to use.
   # -- If not set and create is true, a name is generated using the fullname template
-  name: ""
+  name: "secret-sa"
 
 # -- Define command to be executed by grafana container at startup
 command: []
@@ -56,6 +53,21 @@ args: []
 # -- Deployment and Statefulset labels
 labels: {}
 # app.kubernetes.io/name: app
+
+# -- Secret store CSI Driver - https://secrets-store-csi-driver.sigs.k8s.io/
+secretsProvider:
+  enabled: false
+
+  name: "secret-name" 
+  provider: "aws"
+  region: "us-east-1"
+  
+  objects: []
+    #- path: ENVIRONMENT
+    #  objectAlias: ENVIRONMENT
+  data: []
+    #- objectName: ENVIRONMENT
+    #  key: ENVIRONMENT
 
 # -- Extra environment variables passed to pods
 extraEnvs: []
@@ -69,6 +81,8 @@ extraEnvs: []
       
 # -- Allows you to load environment variables from kubernetes secret or config map
 envFrom: []
+# - secretRef:
+#     name: secret-name  ## Secret Name use secret store drive
 # - configMapRef:
 #     name: config-map
 
@@ -272,7 +286,7 @@ autoscaling:
     #       name: main-route
     #     target:
     #       type: Value
-    #       value: 10k        
+    #       value: 10k     
 
 # -- Metrics Service Monitor
 serviceMonitor:

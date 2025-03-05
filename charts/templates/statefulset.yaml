@@ -91,6 +91,11 @@ spec:
             {{ toYaml .Values.envFrom | nindent 10 }}
             {{- end }}
           volumeMounts:
+            {{- if .Values.secretsProvider.enabled }}
+            - name: environment-variables
+              mountPath: "/mnt/secrets-store"
+              readOnly: true
+            {{- end -}}
             {{- with .Values.extraVolumeMounts }}
             {{- toYaml . | nindent 12 }}
             {{- end }}
@@ -118,6 +123,14 @@ spec:
         {{- toYaml . | nindent 8 }}
       {{- end }}
       volumes:
+        {{- if .Values.secretsProvider.enabled }}
+        - name: environment-variables
+          csi:
+            driver: secrets-store.csi.k8s.io
+            readOnly: true
+            volumeAttributes:
+              secretProviderClass: {{ .Values.secretsProvider.name }}
+        {{- end -}}
         {{- with .Values.extraVolumes }}
         {{- toYaml . | nindent 8 }}
         {{- end }}
