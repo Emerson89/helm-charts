@@ -1,6 +1,6 @@
 # tpl
 
-![Version: 2.1.0](https://img.shields.io/badge/Version-2.1.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 1.23.0](https://img.shields.io/badge/AppVersion-1.23.0-informational?style=flat-square)
+![Version: 2.1.1](https://img.shields.io/badge/Version-2.1.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 1.23.0](https://img.shields.io/badge/AppVersion-1.23.0-informational?style=flat-square)
 
 A Helm chart for Kubernetes
 
@@ -16,7 +16,7 @@ A Helm chart for Kubernetes
 | UpdateStrategy.type | string | `"RollingUpdate"` | OnDelete  |
 | affinity | object | `{}` | Affinity settings for pod assignment |
 | args | list | `[]` | Define additional args if command is used |
-| autoscaling | object | `{"enabled":false,"maxReplicas":10,"minReplicas":1}` | HPA settings |
+| autoscaling | object | `{"behavior":{},"enabled":false,"maxReplicas":10,"minReplicas":1}` | HPA settings |
 | command | list | `[]` | Define command to be executed by grafana container at startup |
 | configMounts | list | `[]` | Need to use ConfigMap without creating volume only main container |
 | containerPorts | list | `[{"containerPort":80,"name":"http","protocol":"TCP"}]` | Additional Container Ports |

@@ -266,6 +266,24 @@ autoscaling:
 
   minReplicas: 1
   maxReplicas: 10
+  behavior: {}  
+    # scaleDown:
+    #   policies:
+    #   - periodSeconds: 15
+    #     type: Percent
+    #     value: 100
+    #   selectPolicy: Max
+    #   stabilizationWindowSeconds: 3600
+    # scaleUp:
+    #   policies:
+    #   - periodSeconds: 15
+    #     type: Pods
+    #     value: 4
+    #   - periodSeconds: 15
+    #     type: Percent
+    #     value: 100
+    #   selectPolicy: Max
+    #   stabilizationWindowSeconds: 0
   #targetCPUUtilizationPercentage: 80
   #targetMemoryUtilizationPercentage: 80
   #targetsCustom:

@@ -31,7 +31,16 @@ spec:
     {{- end }}
     {{- if .Values.autoscaling.targetsCustom }}
     {{- range .Values.autoscaling.targetsCustom }}
-    - {{- toYaml . | nindent 6 }}
+    - {{- toYaml . | nindent 6 }} 
     {{- end }}
     {{- end }}
-{{- end }}
+  {{- if .Values.autoscaling.behavior }}  
+  behavior:    
+    {{- with .Values.autoscaling.behavior.scaleDown }}
+    scaleDown: {{ toYaml . | nindent 6 }}
+    {{- end }}
+    {{- with .Values.autoscaling.behavior.scaleUp }}
+    scaleUp: {{ toYaml . | nindent 6 }}
+    {{- end }}
+  {{- end }}
+  {{- end }}
