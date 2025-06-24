@@ -213,6 +213,18 @@ extraVolumes: []
   #   configMap:
   #     name: fluent-bit-config
 
+letsencrypt:
+  # -- Enable create Cluster Issuer
+  enabled: false
+  
+  # -- Email use cluster Issuer
+  email: email@example.com
+  # -- Solvers options ##https://cert-manager.io/docs/configuration/acme/
+  solvers:
+  - http01:
+      ingress:
+        ingressClassName: nginx
+        
 ingress:
   # -- Enable Ingress
   enabled: false
