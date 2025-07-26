@@ -41,7 +41,11 @@ serviceAccount:
       #eks.amazonaws.com/role-arn: arn:aws:iam::xxxxxxxxxxxx:role/role-sa
   # -- The name of the service account to use.
   # -- If not set and create is true, a name is generated using the fullname template
-  name: "secret-sa"
+  # -- If false Use name to use an already created service account
+  name: ""
+
+# -- Define ShareProcessNamespace
+shareProcessNamespace: false
 
 # -- Define command to be executed by grafana container at startup
 command: []
@@ -248,6 +252,15 @@ ingress:
   #    hosts:
   #      - chart-example.local
 
+# -- Define topologySpreadConstraints
+topologySpreadConstraints: []
+    # - maxSkew: 1
+    #   topologyKey: "kubernetes.io/hostname"
+    #   whenUnsatisfiable: DoNotSchedule
+    #   labelSelector:
+    #     matchLabels:
+    #       app.kubernetes.io/name: nginx
+
 # -- Liveness and Readiness Probe settings
 probe: {}
   # livenessProbe:
@@ -278,9 +291,7 @@ autoscaling:
 
   minReplicas: 1
   maxReplicas: 10
-  #targetCPUUtilizationPercentage: 80
-  #targetMemoryUtilizationPercentage: 80
-  behavior: {}     
+  behavior: {}  
     # scaleDown:
     #   policies:
     #   - periodSeconds: 15
@@ -298,6 +309,8 @@ autoscaling:
     #     value: 100
     #   selectPolicy: Max
     #   stabilizationWindowSeconds: 0
+  #targetCPUUtilizationPercentage: 80
+  #targetMemoryUtilizationPercentage: 80
   #targetsCustom:
     # - type: Pods
     #   pods:

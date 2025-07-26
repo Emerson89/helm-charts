@@ -15,7 +15,10 @@ type: application
 # This is the chart version. This version number should be incremented each time you make changes
 # to the chart and its templates, including the app version.
 # Versions are expected to follow Semantic Versioning (https://semver.org/)
-version: 2.1.2
+# MAJOR version when you make incompatible API changes
+# MINOR version when you add functionality in a backward compatible manner
+# PATCH version when you make backward compatible bug fixes
+version: 2.2.2
 
 # This is the version number of the application being deployed. This version number should be
 # incremented each time you make changes to the application. Versions are not expected to

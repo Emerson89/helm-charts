@@ -48,8 +48,15 @@ spec:
       {{- end }}
       securityContext:
         {{- toYaml .Values.podSecurityContext | nindent 8 }}
-      {{- if .Values.serviceAccount.create }}
-      serviceAccountName: {{ include "tpl.serviceAccountName" . }}
+      serviceAccountName: {{- if .Values.serviceAccount.create }}
+        {{ include "tpl.serviceAccountName" . }}
+      {{- else }}
+        {{ .Values.serviceAccount.name }}
+      {{- end }}
+      shareProcessNamespace: {{ .Values.shareProcessNamespace | default false }}
+      topologySpreadConstraints:
+      {{- with .Values.topologySpreadConstraints }}
+        {{- toYaml . | nindent 8 }}
       {{- end }}
       initContainers:
       {{- with .Values.extraInitContainers }}
