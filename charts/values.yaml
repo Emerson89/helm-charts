@@ -223,6 +223,16 @@ ConfigMap: {}
     #        }
     #    }
 
+# -- Only Modo deployment
+pvcDeployment:
+  enabled: false
+
+  name: "test-pvc"
+  accessModes: ReadWriteMany
+  storage: 10Gi
+  storageClassName: filestore-rwx-vpc
+  volumeMode: filesystem
+
 # -- Additional volume mounts
 extraVolumeMounts: []
   # - name: varlog
@@ -230,6 +240,9 @@ extraVolumeMounts: []
   # - name: extras
   #   mountPath: /usr/share/extras
   #   readOnly: true
+  ## Mount-deployment
+  # - name: shared-data
+  #   mountPath: /app/vol
 
 # -- Additional volumes
 extraVolumes: []
@@ -238,6 +251,10 @@ extraVolumes: []
   # - name: fluent-bit-config
   #   configMap:
   #     name: fluent-bit-config
+  ## PVC-deployment
+  # - name: shared-data
+  #   persistentVolumeClaim:
+  #      claimName: test-pvc 
 
 letsencrypt:
   # -- Enable create Cluster Issuer

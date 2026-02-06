@@ -1,0 +1,16 @@
+{{- if .Values.pvcDeployment.enabled }}
+{{- if not .Values.statefulset }}
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: {{ .Values.pvcDeployment.name }}
+spec:
+  accessModes:
+    - {{ .Values.pvcDeployment.accessModes }}
+  resources:
+    requests:
+      storage: {{ .Values.pvcDeployment.storage }}
+  storageClassName: {{ .Values.pvcDeployment.storageClassName }}
+  volumeMode: {{ .Values.pvcDeployment.volumeMode }}
+{{- end -}}
+{{- end }}
