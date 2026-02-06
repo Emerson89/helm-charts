@@ -73,6 +73,28 @@ secretsProvider:
     #- objectName: ENVIRONMENT
     #  key: ENVIRONMENT
 
+# -- ExternalSecret Driver - https://external-secrets.io/latest/
+externalSecret:
+  enabled: false
+
+  secretStoreName: "gcp-secret-manager"
+  
+  secrets:
+    - name: test1
+      data:
+        - secretKey: .configenv
+          keyName: staging-test1-config
+
+    - name: test2
+      data:
+        - secretKey: .env
+          keyName: staging-test2-config
+    
+    - name: test3
+      dataFrom:
+        key: staging-config
+
+
 # -- Extra environment variables passed to pods
 extraEnvs: []
 #  - name: MY_ENVIRONMENT_VAR
