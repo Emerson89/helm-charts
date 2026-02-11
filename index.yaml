@@ -3,6 +3,16 @@ entries:
   tpl:
   - apiVersion: v2
     appVersion: 1.23.0
+    created: "2026-02-11T17:33:21.074156479Z"
+    description: A Helm chart for Kubernetes
+    digest: 0ebb51681cf8c73733d5cba8a5ad8f8e782f2ba3014b358228ed5c6a0fbbb5e3
+    name: tpl
+    type: application
+    urls:
+    - tpl-2.3.4.tgz
+    version: 2.3.4
+  - apiVersion: v2
+    appVersion: 1.23.0
     created: "2026-02-06T17:22:58.95751679Z"
     description: A Helm chart for Kubernetes
     digest: bb1c0fde4dad089869475472be1f4dadad655b07737c7c92ad52cb5a4138c1e0
@@ -31,4 +41,4 @@ entries:
     urls:
     - tpl-2.2.2.tgz
     version: 2.2.2
-generated: "2026-02-06T17:22:58.957537238Z"
+generated: "2026-02-11T17:33:21.07418877Z"
