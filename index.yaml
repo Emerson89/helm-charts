@@ -13,26 +13,6 @@ entries:
     version: 2.3.4
   - apiVersion: v2
     appVersion: 1.23.0
-    created: "2026-02-06T17:22:58.95751679Z"
-    description: A Helm chart for Kubernetes
-    digest: bb1c0fde4dad089869475472be1f4dadad655b07737c7c92ad52cb5a4138c1e0
-    name: tpl
-    type: application
-    urls:
-    - https://github.com/Emerson89/helm-charts/releases/download/tpl-2.2.4/tpl-2.2.4.tgz
-    version: 2.2.4
-  - apiVersion: v2
-    appVersion: 1.23.0
-    created: "2026-02-06T16:58:32.204843011Z"
-    description: A Helm chart for Kubernetes
-    digest: 44c58d638c0abbe1552d2207c6fa5a8c83596ca7371669ed9c4a5de81b76f311
-    name: tpl
-    type: application
-    urls:
-    - https://github.com/Emerson89/helm-charts/releases/download/tpl-2.2.3/tpl-2.2.3.tgz
-    version: 2.2.3
-  - apiVersion: v2
-    appVersion: 1.23.0
     created: "2025-07-26T17:05:46.296063041-03:00"
     description: A Helm chart for Kubernetes
     digest: ac8f2c7ddd83255786558beb7ae49a32d6cd89b182903416da3d0ffc2f634c31
